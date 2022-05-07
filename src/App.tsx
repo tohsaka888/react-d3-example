@@ -7,7 +7,14 @@ function App() {
   const canvasRef = useRef<HTMLDivElement>();
   useEffect(() => {
     if (canvasRef.current) {
-      console.log(canvasRef.current)
+      console.log(canvasRef.current);
+      // 正常但不显示1
+      // d3.select(".d3-canvas")
+      //   .data(data)
+      //   .enter()
+      //   .append("p")
+      //   .text((val) => val);
+      // 报错
       d3.select(canvasRef.current)
         .data(data)
         .enter()
@@ -24,6 +31,7 @@ function App() {
             canvasRef.current = ref;
           }
         }}
+        className="d3-canvas"
       ></div>
     </div>
   );
