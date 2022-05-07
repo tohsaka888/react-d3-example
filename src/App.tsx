@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import * as d3 from "d3";
-import { data } from "./mock/data";
 import Controller from "./components/Controller";
 import { NewPointContext } from "./Context/NewPointContext";
 import {
   ContainerContext,
-  ContainerContextProp,
 } from "./Context/ContainerContext";
 
 function App() {
