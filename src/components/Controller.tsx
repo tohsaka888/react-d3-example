@@ -9,13 +9,27 @@ function Controller() {
   const props = useContext(NewPointContext);
   const setInfo = useContext(PointInfoContext)?.setInfo;
   return (
-    <div style={{ textAlign: "left" }}>
-      x:
-      <input type="text" onChange={(e) => setTempX(+e.target.value)} />
-      y:
-      <input type="text" onChange={(e) => setTempY(+e.target.value)} />
-      point-info:
-      <input type="text" onChange={(e) => setTempInfo(e.target.value)} />
+    <div
+      style={{
+        textAlign: "left",
+        height: "5vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-around",
+      }}
+    >
+      <div>
+        x:
+        <input type="text" onChange={(e) => setTempX(+e.target.value)} />
+      </div>
+      <div>
+        y:
+        <input type="text" onChange={(e) => setTempY(+e.target.value)} />
+      </div>
+      <div>
+        point-info:
+        <input type="text" onChange={(e) => setTempInfo(e.target.value)} />
+      </div>
       <button
         onClick={() => {
           props?.setX(tempX);

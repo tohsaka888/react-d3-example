@@ -33,11 +33,24 @@ function App() {
     if (x && y) {
       containerRef.current
         ?.append("circle")
-        .attr("r", 40)
+        .style("z-index", "1")
+        .attr("r", 30)
         .attr("cx", x)
-        .attr("cy", y);
+        .attr("cy", y)
+        .attr("fill", "transparent")
+        .attr("stroke", "red")
+        .append("text")
+        .style("z-index", "2")
+        .text(info);
+      d3.selectAll("svg")
+        .append("text")
+        .attr("x", x)
+        .attr("y", y)
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "central")
+        .text(info);
     }
-  }, [x, y]);
+  }, [info, x, y]);
   return (
     <ContainerContext.Provider value={{ containerRef }}>
       <NewPointContext.Provider value={{ x, y, setX, setY }}>
@@ -50,11 +63,9 @@ function App() {
                   canvasRef.current = ref;
                 }
               }}
-              className="d3-canvas"
               style={{
-                width: window.innerWidth * 0.8,
-                height: window.innerHeight * 0.8,
-                marginTop: "30px",
+                width: "100vw",
+                height: "90vh",
               }}
             />
           </div>
