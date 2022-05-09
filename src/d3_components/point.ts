@@ -6,12 +6,23 @@ const createPoint = (container: D3CANVAS, x: number, y: number): d3.Selection<SV
     ?.append('g')
     .on('mouseover', function () {
       d3.select(this).select('circle').transition().duration(500).attr("fill", "red").attr('filter', `drop-shadow(0px 0px 10px yellow)`)
-      console.log(111)
     })
     .on('mouseout', function () {
       d3.select(this).select('circle').transition().duration(500).attr("fill", "transparent")
-      console.log(222)
     })
+    .call(d3.drag<SVGGElement, unknown>()
+      .on('start', function (event, d: any) {
+        d3.select(this).raise().attr("stroke", "black");
+      })
+      .on('drag', function (event, d) {
+        d3.select(this).select('circle').attr("cx", event.x).attr("cy", event.y);
+        d3.select(this).select('text').attr('x', event.x).attr('y', event.y)
+        console.log(event.x, event.y)
+      })
+      .on('end', function dragended(event, d) {
+        d3.select(this).attr("stroke", null);
+      })
+    )
   pointContainer?.append("circle")
     .attr("r", 30)
     .attr("cx", x)
