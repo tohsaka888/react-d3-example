@@ -47,7 +47,6 @@ function App() {
 
   useEffect(() => {
     if (canvasRef.current) {
-      // 需要先取出所有子元素比对
       containerRef.current = createCanvas(canvasRef.current, canvasDragEvent);
       // createBackground(containerRef.current);
     }
