@@ -32,7 +32,6 @@ const createPoint = (container: D3CANVAS, x: number, y: number, rightEventClick:
     .attr("stroke", "red")
     .style("cursor", "pointer")
   return pointContainer
-  // .call(d3.drag())
 }
 
 const createPointInfo = (pointContainer: d3.Selection<SVGGElement, unknown, null, undefined> | undefined, x: number, y: number, info: string) => {
