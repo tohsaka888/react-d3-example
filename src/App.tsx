@@ -6,8 +6,9 @@ import { NewPointContext } from "./Context/NewPointContext";
 import { ContainerContext } from "./Context/ContainerContext";
 import { PointInfoContext } from "./Context/PointInfoContext";
 import { createPoint, createPointInfo } from "./d3_components/point";
-import { createBackground, createCanvas } from "./d3_components/canvas";
+import { createCanvas } from "./d3_components/canvas";
 import RightClickMenu from "./components/RightClickMenu";
+import { D3CANVAS } from "./d3_components/type";
 
 function App() {
   const canvasRef = useRef<HTMLDivElement>();
@@ -17,8 +18,7 @@ function App() {
   const [rightMenuX, setRightMenuX] = useState<number>(0);
   const [rightMenuY, setRightMenuY] = useState<number>(0);
   const [show, setShow] = useState<boolean>(false);
-  const containerRef =
-    useRef<d3.Selection<SVGSVGElement, unknown, null, undefined>>();
+  const containerRef = useRef<D3CANVAS>();
   const pointerContainerRef = useRef<
     d3.Selection<SVGGElement, unknown, null, undefined> | undefined
   >();
@@ -35,13 +35,23 @@ function App() {
     }
   }, []);
 
+  const canvasDragEvent = useCallback((e: any, d: any) => {
+    const tempArr = containerRef.current?.attr("transform").split(",");
+    const x = +(tempArr?.[0]?.split("(")[1] || 0);
+    const y = +(tempArr?.[1]?.split(")")[0] || 0);
+    containerRef.current?.attr(
+      "transform",
+      `translate(${x + e.dx}, ${y + e.dy})`
+    );
+  }, []);
+
   useEffect(() => {
     if (canvasRef.current) {
       // 需要先取出所有子元素比对
-      containerRef.current = createCanvas(canvasRef.current);
-      createBackground(containerRef.current);
+      containerRef.current = createCanvas(canvasRef.current, canvasDragEvent);
+      // createBackground(containerRef.current);
     }
-  }, []);
+  }, [canvasDragEvent]);
   useEffect(() => {
     if (x && y) {
       pointerContainerRef.current = createPoint(
@@ -69,6 +79,7 @@ function App() {
               style={{
                 width: "100vw",
                 height: "90vh",
+                border: "1px solid red",
               }}
             />
           </div>
