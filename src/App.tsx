@@ -18,6 +18,10 @@ function App() {
   const [rightMenuX, setRightMenuX] = useState<number>(0);
   const [rightMenuY, setRightMenuY] = useState<number>(0);
   const [show, setShow] = useState<boolean>(false);
+  const [movePoint, setMovePoint] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
   const containerRef = useRef<D3CANVAS>();
   const pointerContainerRef = useRef<
     d3.Selection<SVGGElement, unknown, null, undefined> | undefined
@@ -45,6 +49,10 @@ function App() {
     );
   }, []);
 
+  const pointDragEvent = useCallback((e: any) => {
+    setMovePoint({ x: e.x, y: e.y });
+  }, []);
+
   useEffect(() => {
     if (canvasRef.current) {
       containerRef.current = createCanvas(canvasRef.current, canvasDragEvent);
@@ -57,11 +65,26 @@ function App() {
         containerRef.current,
         x,
         y,
-        rightClickEvent
+        rightClickEvent,
+        pointDragEvent
       );
       createPointInfo(pointerContainerRef.current, x, y, info);
     }
-  }, [info, rightClickEvent, x, y]);
+  }, [info, pointDragEvent, rightClickEvent, x, y]);
+
+  useEffect(() => {
+    if (!containerRef.current?.selectAll("path").size()) {
+      containerRef.current
+        ?.append("path")
+        .attr("d", `M ${movePoint.x} ${movePoint.y} L 0 0`)
+        .attr("stroke", "blue")
+        .attr("id", "point");
+    } else {
+      containerRef.current
+        ?.selectAll("#point")
+        .attr("d", `M ${movePoint.x} ${movePoint.y} L 0 0`);
+    }
+  }, [movePoint]);
 
   return (
     <ContainerContext.Provider value={{ containerRef }}>
