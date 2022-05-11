@@ -18,10 +18,16 @@ function App() {
   const [rightMenuX, setRightMenuX] = useState<number>(0);
   const [rightMenuY, setRightMenuY] = useState<number>(0);
   const [show, setShow] = useState<boolean>(false);
-  const [movePoint, setMovePoint] = useState<{ x: number; y: number }>({
+  const [movePoint, setMovePoint] = useState<{
+    x: number;
+    y: number;
+    pointId: string;
+  }>({
     x: 0,
     y: 0,
+    pointId: "point",
   });
+  const [pointId, setPointId] = useState<number>(0);
   const containerRef = useRef<D3CANVAS>();
   const pointerContainerRef = useRef<
     d3.Selection<SVGGElement, unknown, null, undefined> | undefined
@@ -49,8 +55,8 @@ function App() {
     );
   }, []);
 
-  const pointDragEvent = useCallback((e: any) => {
-    setMovePoint({ x: e.x, y: e.y });
+  const pointDragEvent = useCallback((e: any, pointId: string) => {
+    setMovePoint({ x: e.x, y: e.y, pointId: pointId });
   }, []);
 
   useEffect(() => {
@@ -65,26 +71,22 @@ function App() {
         containerRef.current,
         x,
         y,
+        pointId,
         rightClickEvent,
         pointDragEvent
       );
       createPointInfo(pointerContainerRef.current, x, y, info);
+      setPointId((pointId) => pointId + 1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [info, pointDragEvent, rightClickEvent, x, y]);
 
   useEffect(() => {
-    if (!containerRef.current?.selectAll("path").size()) {
-      containerRef.current
-        ?.append("path")
-        .attr("d", `M ${movePoint.x} ${movePoint.y} L 0 0`)
-        .attr("stroke", "blue")
-        .attr("id", "point");
-    } else {
-      containerRef.current
-        ?.selectAll("#point")
-        .attr("d", `M ${movePoint.x} ${movePoint.y} L 0 0`);
-    }
-  }, [movePoint]);
+    console.log("#line-" + movePoint.pointId);
+    containerRef.current
+      ?.selectAll("#line-" + movePoint.pointId)
+      .attr("d", `M ${movePoint.x} ${movePoint.y} L 0 0`);
+  }, [movePoint, pointId]);
 
   return (
     <ContainerContext.Provider value={{ containerRef }}>
